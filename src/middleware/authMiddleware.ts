@@ -20,7 +20,7 @@ export const protect = (
     const token = authHeader.split(" ")[1];
     const secret = process.env.JWT_SECRET;
 
-    if (!secret) {
+    if (!secret || !token) {
       return res.status(401).json({ message: "Not authorized" });
     }
 
