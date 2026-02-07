@@ -1,21 +1,18 @@
-import express, { type Request, type Response } from "express";
+import express from "express";
 import authRouter from "./routes/authRoutes.js";
 import postRouter from "./routes/postRoutes.js";
 import { connectDB } from "./config/db.js";
+import dotenv from "dotenv";
+dotenv.config();
 
-const app = express()
+const app = express();
 
-const port = 8000;
+const port = process.env.Port;
 
-app.get("/" , (req:Request, res:Response) =>{
-    res.send("server is working fine")
-})
+app.use("/api/auth", authRouter);
+app.use("/api/posts", postRouter);
 
-app.use("/api/auth", authRouter)
-app.use("/api/posts", postRouter)
-
-
-app.listen(port, ()=>{
-    connectDB();
-    console.log(`server is running on localhost:${port}`)
-})
+app.listen(port, async () => {
+  await connectDB();
+  console.log(`server is running on localhost:${port}`);
+});
