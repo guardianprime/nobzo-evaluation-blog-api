@@ -1,7 +1,11 @@
 import { Router, type Response } from "express";
 import mongoose from "mongoose";
 import { Post } from "../models/PostModel.js";
-import { protect, type AuthRequest } from "../middleware/authMiddleware.js";
+import {
+  protect,
+  optionalAuth,
+  type AuthRequest,
+} from "../middleware/authMiddleware.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/appError.js";
 
@@ -33,6 +37,7 @@ postRouter.post(
 
 postRouter.get(
   "/",
+  optionalAuth,
   asyncHandler(async (req: AuthRequest, res: Response) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;

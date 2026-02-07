@@ -15,13 +15,11 @@ export const errorHandler = (
     message = err.message;
   }
 
-  // Mongoose Cast Error (invalid ObjectId)
   if (err.name === "CastError") {
     statusCode = 400;
     message = "Invalid ID format";
   }
 
-  // Mongo duplicate key error
   if ((err as any).code === 11000) {
     statusCode = 400;
     message = "Duplicate field value";

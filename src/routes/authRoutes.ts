@@ -1,11 +1,12 @@
 import { Router, type Request, type Response } from "express";
 import bcrypt from "bcrypt";
 import { User } from "../models/UserModel.js";
+import { generateToken } from "../utils/generateToken.js";
 
 const authRouter: Router = Router();
 
 authRouter.post("/register", async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
@@ -14,14 +15,13 @@ authRouter.post("/register", async (req: Request, res: Response) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = await User.create({
+      name,
       email,
-      password: hashedPassword,
+      password,
     });
 
-    const token = generateToken(user._id.toString());
+    const token = generateToken({ id: user._id.toString() });
 
     return res.status(201).json({
       message: "User created",
